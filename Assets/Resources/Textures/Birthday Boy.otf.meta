@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 224d38291f3ceee42bc3ad495116451d
+timeCreated: 1495518851
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Birthday Boy
+  fontNames:
+  - Birthday Boy
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: b9c51c60ffdaa1943a75704cdcd1fead, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

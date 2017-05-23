@@ -12,6 +12,7 @@ public class GameMgr : MonoBehaviour {
     public UILabel _lb_pop_level;
     public UILabel _lb_pop_content;
     public UILabel _lb_pop_price;
+    public UILabel _lb_pop_price_head;
     public UILabel _lb_pop_price_lack;
     public UILabel _lb_pop_price_lack_head;
 
@@ -119,22 +120,34 @@ public class GameMgr : MonoBehaviour {
     private void SetRecruitPrice()
     {
         _lb_title.text = "<광부고용>";
-        _lb_pop_content.text = "광부를 고용합니다.";
         _level = _miner_mgr.GetRecruitLevel();
         _lb_pop_level.text = "+" + _level;
-        _need_price = _miner_mgr.GetRecruitPrice(_level);
-        _lb_pop_price.text = _need_price.ToString();
-        _cur_gold = _miner_mgr.GetTotalGold();
-        _lack_gold = _cur_gold - _need_price;
-        if (_lack_gold >= 0)
+
+        if (!_miner_mgr.IsMaxMiner())
         {
-            _lb_pop_price_lack.text = "";
-            _lb_pop_price_lack_head.text = "";
+            _lb_pop_content.text = "광부를 고용합니다.";
+            _need_price = _miner_mgr.GetRecruitPrice(_level);
+            _lb_pop_price.text = _need_price.ToString();
+            _cur_gold = _miner_mgr.GetTotalGold();
+            _lack_gold = _cur_gold - _need_price;
+            if (_lack_gold >= 0)
+            {
+                _lb_pop_price_lack.text = "";
+                _lb_pop_price_lack_head.text = "";
+            }
+            else
+            {
+                _lb_pop_price_lack.text = _lack_gold.ToString();
+                _lb_pop_price_lack_head.text = "부족 : ";
+            }
         }
         else
         {
-            _lb_pop_price_lack.text = _lack_gold.ToString();
-            _lb_pop_price_lack_head.text = "부족 : ";
+            _lb_pop_content.text = "최대치";
+            _lb_pop_price.text = "";
+            _lb_pop_price_head.text = "";
+            _lb_pop_price_lack.text = "";
+            _lb_pop_price_lack_head.text = "";
         }
     }
 
@@ -187,6 +200,7 @@ public class GameMgr : MonoBehaviour {
         _lb_title.text = "<광부 " + _cur_selected_miner_idx + ">";
         _lb_pop_content.text = "광부를 성장시킵니다.";
         _level = _miner_mgr._miners[_cur_selected_miner_idx].GetLevel();
+        _lb_pop_content.text += "\n 다음 생산 골드: " + _miner_mgr.GetperGold(_level + 1);
         _lb_pop_level.text = "+" + _level;
         _need_price = _miner_mgr.GetMinerLevelupPrice(_level);
         _lb_pop_price.text = _need_price.ToString();
@@ -211,9 +225,12 @@ public class GameMgr : MonoBehaviour {
             case PopState.MINER_RECRUIT:
                 if(_lack_gold >= 0)
                 {
-                    _miner_mgr.AddMiner();
-                    _cur_gold -= _need_price;
-                    _num_rolling_mgr.AddGold(-_need_price);
+                    if (!_miner_mgr.IsMaxMiner())
+                    {
+                        _miner_mgr.AddMiner();
+                        _cur_gold -= _need_price;
+                        _num_rolling_mgr.AddGold(-_need_price);
+                    }
                 }
                 break;
 

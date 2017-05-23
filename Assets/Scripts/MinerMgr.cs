@@ -22,6 +22,9 @@ public class MinerMgr : MonoBehaviour
     private int _miners_speed_level = 1;
     private int _mountain_level = 1;
 
+    int MAX_MINER = 20;
+    int MAX_MINER_LEVEL = 20;
+
     void Start () 
     {
         _game_mgr = GameObject.Find("GameMgr").GetComponent<GameMgr>();
@@ -176,6 +179,16 @@ public class MinerMgr : MonoBehaviour
         return _miner_levelup_price_table[level];
     }
 
+    // 지금 광부가 다음레벨이 됐을 때 한번의 생산량
+    public int GetperGold(int levelplusone)
+    {
+        if(levelplusone < MAX_MINER_LEVEL)
+        {
+            return _per_gold_by_miner_level_table[levelplusone];
+        }
+        return 0;
+    }
+
     public int GetTotalGold()
     {
         return _num_rolling_mgr.GetTotalGold();
@@ -197,6 +210,16 @@ public class MinerMgr : MonoBehaviour
     public int GetMountainPrice(int key)
     {
         return _mountain_upgrade_price_table[key];
+    }
+
+    // 광부가 20명이 다찼으면 true를 리턴
+    public bool IsMaxMiner()
+    {
+        if(_miners.Count >= MAX_MINER)
+        {
+            return true;
+        }
+        return false;
     }
 
 }

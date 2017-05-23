@@ -176,6 +176,8 @@
     <Compile Include="Assets\NGUI\Scripts\UI\UITooltip.cs" />
     <Compile Include="Assets\NGUI\Scripts\UI\UIViewport.cs" />
     <Compile Include="Assets\Scripts\GameMgr.cs" />
+    <Compile Include="Assets\Scripts\HomingGold.cs" />
+    <Compile Include="Assets\Scripts\HomingMgr.cs" />
     <Compile Include="Assets\Scripts\Miner.cs" />
     <Compile Include="Assets\Scripts\MinerMgr.cs" />
     <Compile Include="Assets\Scripts\NumberRollingMgr.cs" />

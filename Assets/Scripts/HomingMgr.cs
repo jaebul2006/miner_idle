@@ -9,10 +9,9 @@ public class HomingMgr : MonoBehaviour
     {
     }
 
-	public void GoldGetEff(int get_gold)
+	public void GoldGetEff()
     {
         GameObject homing_gold = Instantiate(Resources.Load("Prefabs/HomingGold")) as GameObject;
-        homing_gold.GetComponent<HomingGold>().AddGold(get_gold);
     }
 
 }

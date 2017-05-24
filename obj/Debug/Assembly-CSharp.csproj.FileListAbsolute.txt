@@ -29,3 +29,5 @@ D:\MinerIdle\Temp\bin\Debug\UnityEngine.VR.xml
 D:\MinerIdle\obj\Debug\Assembly-CSharp.csprojResolveAssemblyReference.cache
 D:\MinerIdle\obj\Debug\Assembly-CSharp.dll
 D:\MinerIdle\obj\Debug\Assembly-CSharp.pdb
+D:\UnityProjects\MineIdle\obj\Debug\Assembly-CSharp.csprojResolveAssemblyReference.cache
+D:\UnityProjects\MineIdle\obj\Debug\Assembly-CSharp.dll

@@ -130,6 +130,7 @@ public class GameMgr : MonoBehaviour {
             _lb_pop_price.text = _need_price.ToString();
             _cur_gold = _miner_mgr.GetTotalGold();
             _lack_gold = _cur_gold - _need_price;
+
             if (_lack_gold >= 0)
             {
                 _lb_pop_price_lack.text = "";
@@ -153,69 +154,104 @@ public class GameMgr : MonoBehaviour {
 
     private void SetFoodPrice()
     {
-        _lb_title.text = "<급식>";
-        _lb_pop_content.text = "급식 레벨을 올려\n 광부들의 속도를 5% 높입니다.";
-        _level = _miner_mgr.GetSpeedLevel();
-        _lb_pop_level.text = "+" + _level;
-        _need_price = _miner_mgr.GetSpeedPrice(_level);
-        _lb_pop_price.text = _need_price.ToString();
-        _cur_gold = _miner_mgr.GetTotalGold();
-        _lack_gold = _cur_gold - _need_price;
-        if (_lack_gold >= 0)
-        {
-            _lb_pop_price_lack.text = "";
-            _lb_pop_price_lack_head.text = "";
-        }
-        else
-        {
-            _lb_pop_price_lack.text = _lack_gold.ToString();
-            _lb_pop_price_lack_head.text = "부족 : ";
-        }
+		_lb_title.text = "<급식>";
+		_level = _miner_mgr.GetSpeedLevel ();
+		_lb_pop_level.text = "+" + _level;
+
+		if (!_miner_mgr.IsMaxFood ()) 
+		{
+			_lb_pop_content.text = "급식 레벨을 올려\n 광부들의 속도를 5% 높입니다.";
+			_need_price = _miner_mgr.GetSpeedPrice (_level);
+			_lb_pop_price.text = _need_price.ToString ();
+			_cur_gold = _miner_mgr.GetTotalGold ();
+			_lack_gold = _cur_gold - _need_price;
+        
+			if (_lack_gold >= 0) 
+			{
+				_lb_pop_price_lack.text = "";
+				_lb_pop_price_lack_head.text = "";
+			} 
+			else 
+			{
+				_lb_pop_price_lack.text = _lack_gold.ToString ();
+				_lb_pop_price_lack_head.text = "부족 : ";
+			}
+		} 
+		else 
+		{
+			_lb_pop_content.text = "최대치";
+			_lb_pop_price.text = "";
+			_lb_pop_price_head.text = "";
+			_lb_pop_price_lack.text = "";
+			_lb_pop_price_lack_head.text = "";
+		}
     }
 
     private void SetMountainPrice()
     {
         _lb_title.text = "<광산>";
-        _lb_pop_content.text = "광산 레벨을 올려\n 획득골드를 5% 높입니다.";
-        _level = _miner_mgr.GetMountainLevel();
-        _lb_pop_level.text = "+" + _level;
-        _need_price = _miner_mgr.GetMountainPrice(_level);
-        _lb_pop_price.text = _need_price.ToString();
-        _cur_gold = _miner_mgr.GetTotalGold();
-        _lack_gold = _cur_gold - _need_price;
-        if (_lack_gold >= 0)
-        {
-            _lb_pop_price_lack.text = "";
-            _lb_pop_price_lack_head.text = "";
-        }
-        else
-        {
-            _lb_pop_price_lack.text = _lack_gold.ToString();
-            _lb_pop_price_lack_head.text = "부족 : ";
-        }
+		_level = _miner_mgr.GetMountainLevel();
+		_lb_pop_level.text = "+" + _level;
+
+		if (!_miner_mgr.IsMaxMountain ()) 
+		{
+			_lb_pop_content.text = "광산 레벨을 올려\n 획득골드를 5% 높입니다.";
+			_need_price = _miner_mgr.GetMountainPrice (_level);
+			_lb_pop_price.text = _need_price.ToString ();
+			_cur_gold = _miner_mgr.GetTotalGold ();
+			_lack_gold = _cur_gold - _need_price;
+
+			if (_lack_gold >= 0) {
+				_lb_pop_price_lack.text = "";
+				_lb_pop_price_lack_head.text = "";
+			} else {
+				_lb_pop_price_lack.text = _lack_gold.ToString ();
+				_lb_pop_price_lack_head.text = "부족 : ";
+			}
+		} 
+		else 
+		{
+			_lb_pop_content.text = "최대치";
+			_lb_pop_price.text = "";
+			_lb_pop_price_head.text = "";
+			_lb_pop_price_lack.text = "";
+			_lb_pop_price_lack_head.text = "";
+		}
+
+        
     }
 
     private void SetMinerInfo()
     {
         _lb_title.text = "<광부 " + _cur_selected_miner_idx + ">";
-        _lb_pop_content.text = "광부를 성장시킵니다.";
-        _level = _miner_mgr._miners[_cur_selected_miner_idx].GetLevel();
-        _lb_pop_content.text += "\n 다음 생산 골드: " + _miner_mgr.GetperGold(_level + 1);
-        _lb_pop_level.text = "+" + _level;
-        _need_price = _miner_mgr.GetMinerLevelupPrice(_level);
-        _lb_pop_price.text = _need_price.ToString();
-        _cur_gold = _miner_mgr.GetTotalGold();
-        _lack_gold = _cur_gold - _need_price;
-        if (_lack_gold >= 0)
-        {
-            _lb_pop_price_lack.text = "";
-            _lb_pop_price_lack_head.text = "";
-        }
-        else
-        {
-            _lb_pop_price_lack.text = _lack_gold.ToString();
-            _lb_pop_price_lack_head.text = "부족 : ";
-        }
+		_level = _miner_mgr._miners[_cur_selected_miner_idx].GetLevel();
+		_lb_pop_level.text = "+" + _level;
+
+		if (!_miner_mgr._miners [_cur_selected_miner_idx].IsMaxLevel ()) 
+		{
+			_lb_pop_content.text = "광부를 성장시킵니다.";
+			_lb_pop_content.text += "\n 다음 생산 골드: " + _miner_mgr.GetperGold (_level + 1);
+			_need_price = _miner_mgr.GetMinerLevelupPrice (_level);
+			_lb_pop_price.text = _need_price.ToString ();
+			_cur_gold = _miner_mgr.GetTotalGold ();
+			_lack_gold = _cur_gold - _need_price;
+
+			if (_lack_gold >= 0) {
+				_lb_pop_price_lack.text = "";
+				_lb_pop_price_lack_head.text = "";
+			} else {
+				_lb_pop_price_lack.text = _lack_gold.ToString ();
+				_lb_pop_price_lack_head.text = "부족 : ";
+			}
+		} 
+		else 
+		{
+			_lb_pop_content.text = "최대치";
+			_lb_pop_price.text = "";
+			_lb_pop_price_head.text = "";
+			_lb_pop_price_lack.text = "";
+			_lb_pop_price_lack_head.text = "";
+		}
     }
 
     public void TouchPopupOK()
@@ -237,27 +273,36 @@ public class GameMgr : MonoBehaviour {
             case PopState.FOOD:
                 if (_lack_gold >= 0)
                 {
-                    _miner_mgr.AddMinerSpeed();
-                    _cur_gold -= _need_price;
-                    _num_rolling_mgr.AddGold(-_need_price);
+					if (!_miner_mgr.IsMaxFood ()) 
+					{
+						_miner_mgr.AddMinerSpeed ();
+						_cur_gold -= _need_price;
+						_num_rolling_mgr.AddGold (-_need_price);
+					}
                 }
                 break;
 
             case PopState.MOUNTAIN:
                 if (_lack_gold >= 0)
                 {
-                    _miner_mgr.AddMountain();
-                    _cur_gold -= _need_price;
-                    _num_rolling_mgr.AddGold(-_need_price);
+					if (!_miner_mgr.IsMaxMountain ()) 
+					{
+						_miner_mgr.AddMountain ();
+						_cur_gold -= _need_price;
+						_num_rolling_mgr.AddGold (-_need_price);
+					}
                 }
                 break;
 
             case PopState.MINER_INFO:
                 if (_lack_gold >= 0)
                 {
-                    _miner_mgr._miners[_cur_selected_miner_idx].LevelUp();
-                    _cur_gold -= _need_price;
-                    _num_rolling_mgr.AddGold(-_need_price);
+					if (!_miner_mgr._miners [_cur_selected_miner_idx].IsMaxLevel ()) 
+					{
+						_miner_mgr._miners [_cur_selected_miner_idx].LevelUp ();
+						_cur_gold -= _need_price;
+						_num_rolling_mgr.AddGold (-_need_price);
+					}
                 }
                 break;
             

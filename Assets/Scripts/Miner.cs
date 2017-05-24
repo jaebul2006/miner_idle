@@ -21,12 +21,16 @@ public class Miner : MonoBehaviour
     }
 
     private State _state = State.ToCart;
+	NumberRollingMgr _num_rolling_mgr;
+
+	int MAX_LEVEL = 20;
 
     void Start()
     {
         _tkspr.FlipX = false;
         _miner_mgr = GameObject.Find("MinerMgr").GetComponent<MinerMgr>();
         _homing_mgr = GameObject.Find("HomingMgr").GetComponent<HomingMgr>();
+		_num_rolling_mgr = GameObject.Find ("NumberRollingMgr").GetComponent<NumberRollingMgr> ();
     }
 
     void Update()
@@ -65,7 +69,9 @@ public class Miner : MonoBehaviour
             _state = State.ToMine;
             _tkspr.FlipX = true;
             int get_gold = _miner_mgr.GetPerGold(_level);
-            _homing_mgr.GoldGetEff(get_gold);
+            _homing_mgr.GoldGetEff();
+			_num_rolling_mgr.AddGold(get_gold);
+			Debug.Log("획득골드: " + get_gold);
         }
 
         if(collision.collider.name == "mine")
@@ -82,7 +88,9 @@ public class Miner : MonoBehaviour
 
     public void LevelUp()
     {
-        _level++;
+		if (_level < MAX_LEVEL) {
+			_level++;
+		} 
     }
 
     public void SetSpeed(float spd)
@@ -90,4 +98,12 @@ public class Miner : MonoBehaviour
         _move_speed = spd;
     }
 
+	public bool IsMaxLevel()
+	{
+		if (_level >= MAX_LEVEL) 
+		{
+			return true;
+		}
+		return false;
+	}
 }

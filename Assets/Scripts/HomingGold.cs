@@ -10,9 +10,7 @@ public class HomingGold : MonoBehaviour {
 
     Rigidbody2D _rigid;
     Vector3 _start_point;
-    int _get_gold;
 
-    NumberRollingMgr _num_rolling_mgr;
 
 
 	void Start () 
@@ -22,7 +20,6 @@ public class HomingGold : MonoBehaviour {
         _rigid = gameObject.GetComponent<Rigidbody2D>();
         _start_point = new Vector3(Random.Range(-2.11f, -1.39f), -1.91f, 0f);
         transform.localPosition = _start_point;
-        _num_rolling_mgr = GameObject.Find("NumberRollingMgr").GetComponent<NumberRollingMgr>();
 	}
 	
 	void FixedUpdate () 
@@ -39,14 +36,9 @@ public class HomingGold : MonoBehaviour {
     {
         if (collision.collider.name == "HomingTarget")
         {
-            _num_rolling_mgr.AddGold(_get_gold);
-            Debug.Log("획득골드: " + _get_gold);
             Destroy(gameObject);
         }
     }
 
-    public void AddGold(int get_gold)
-    {
-        _get_gold = get_gold;
-    }
+    
 }

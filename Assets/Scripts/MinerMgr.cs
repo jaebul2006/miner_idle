@@ -23,7 +23,10 @@ public class MinerMgr : MonoBehaviour
     private int _mountain_level = 1;
 
     int MAX_MINER = 20;
-    int MAX_MINER_LEVEL = 20;
+	int MAX_FOOD = 15;
+	int MAX_MOUNTAIN = 15;
+
+	int MAX_MINER_LEVEL = 20; // 광부의 다음레벨의 생산량을 확인하기 위해 필요하다.
 
     void Start () 
     {
@@ -51,7 +54,7 @@ public class MinerMgr : MonoBehaviour
         _miner_recruit_price_table.Add(18, 300000);
         _miner_recruit_price_table.Add(19, 600000);
 
-        _per_gold_by_miner_level_table.Add(1, 15);
+        _per_gold_by_miner_level_table.Add(1, 150000);
         _per_gold_by_miner_level_table.Add(2, 25);
         _per_gold_by_miner_level_table.Add(3, 50);
         _per_gold_by_miner_level_table.Add(4, 75);
@@ -182,7 +185,7 @@ public class MinerMgr : MonoBehaviour
     // 지금 광부가 다음레벨이 됐을 때 한번의 생산량
     public int GetperGold(int levelplusone)
     {
-        if(levelplusone < MAX_MINER_LEVEL)
+        if(levelplusone <= MAX_MINER_LEVEL)
         {
             return _per_gold_by_miner_level_table[levelplusone];
         }
@@ -221,5 +224,25 @@ public class MinerMgr : MonoBehaviour
         }
         return false;
     }
+
+	//  급식 레벨이 15가 되면 true를 리턴.
+	public bool IsMaxFood()
+	{
+		if (_miners_speed_level >= MAX_FOOD) 
+		{
+			return true;
+		}
+		return false;
+	}
+
+	// 광산 레벨이 15가 되면 true를 리턴.
+	public bool IsMaxMountain()
+	{
+		if (_mountain_level >= MAX_MOUNTAIN) 
+		{
+			return true;
+		}
+		return false;
+	}
 
 }

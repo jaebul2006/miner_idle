@@ -130,6 +130,7 @@ public class GameMgr : MonoBehaviour {
             _lb_pop_price.text = _need_price.ToString();
             _cur_gold = _miner_mgr.GetTotalGold();
             _lack_gold = _cur_gold - _need_price;
+			_lb_pop_price_head.text = "가격: ";
 
             if (_lack_gold >= 0)
             {
@@ -165,7 +166,8 @@ public class GameMgr : MonoBehaviour {
 			_lb_pop_price.text = _need_price.ToString ();
 			_cur_gold = _miner_mgr.GetTotalGold ();
 			_lack_gold = _cur_gold - _need_price;
-        
+			_lb_pop_price_head.text = "가격: ";
+				
 			if (_lack_gold >= 0) 
 			{
 				_lb_pop_price_lack.text = "";
@@ -200,6 +202,7 @@ public class GameMgr : MonoBehaviour {
 			_lb_pop_price.text = _need_price.ToString ();
 			_cur_gold = _miner_mgr.GetTotalGold ();
 			_lack_gold = _cur_gold - _need_price;
+			_lb_pop_price_head.text = "가격: ";
 
 			if (_lack_gold >= 0) {
 				_lb_pop_price_lack.text = "";
@@ -217,8 +220,6 @@ public class GameMgr : MonoBehaviour {
 			_lb_pop_price_lack.text = "";
 			_lb_pop_price_lack_head.text = "";
 		}
-
-        
     }
 
     private void SetMinerInfo()
@@ -235,6 +236,7 @@ public class GameMgr : MonoBehaviour {
 			_lb_pop_price.text = _need_price.ToString ();
 			_cur_gold = _miner_mgr.GetTotalGold ();
 			_lack_gold = _cur_gold - _need_price;
+			_lb_pop_price_head.text = "가격: ";
 
 			if (_lack_gold >= 0) {
 				_lb_pop_price_lack.text = "";

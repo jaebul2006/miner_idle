@@ -32,13 +32,19 @@ public class HomingGold : MonoBehaviour {
         _rigid.velocity = transform.right * _speed;
 	}
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    /*private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.collider.name == "HomingTarget")
         {
             Destroy(gameObject);
         }
-    }
+    }*/
 
-    
+	private void OnTriggerEnter2D(Collider2D col)
+	{
+		if (col.name == "HomingTarget")
+		{
+			Destroy(gameObject);
+		}
+	}
 }

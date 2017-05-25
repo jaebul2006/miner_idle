@@ -97,7 +97,7 @@ public class NumberRollingMgr : MonoBehaviour
 
         // 예외처리
         // 값이 잘못 입력되었을 때를 대비한다
-        _lb_rolling_gold[pos].text = value.ToString();
+		_lb_rolling_gold[pos].text = value.ToString();
     }
 
     // 절대값.

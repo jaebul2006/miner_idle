@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "miner_idle", "Assembly-CSharp.csproj", "{DBF1F6F4-6A12-DB8A-56D0-7E6C2F03E7F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "miner_idle", "Assembly-CSharp-Editor.csproj", "{057900E5-BC87-0764-1920-207C52542EBD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DBF1F6F4-6A12-DB8A-56D0-7E6C2F03E7F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBF1F6F4-6A12-DB8A-56D0-7E6C2F03E7F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBF1F6F4-6A12-DB8A-56D0-7E6C2F03E7F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBF1F6F4-6A12-DB8A-56D0-7E6C2F03E7F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{057900E5-BC87-0764-1920-207C52542EBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{057900E5-BC87-0764-1920-207C52542EBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{057900E5-BC87-0764-1920-207C52542EBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{057900E5-BC87-0764-1920-207C52542EBD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal

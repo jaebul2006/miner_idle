@@ -150,6 +150,7 @@ public class MinerMgr : MonoBehaviour
         if (_miners.ContainsKey(idx))
         {
             _game_mgr.PopupMinerInfoOpen(obj.name);
+			_game_mgr._popup_mgr.PopupAni ();
         }
         else 
         {

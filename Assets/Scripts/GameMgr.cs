@@ -37,6 +37,8 @@ public class GameMgr : MonoBehaviour {
     }
     private PopState _ePop_state = PopState.MINER_RECRUIT;
 
+	public PopupMgr _popup_mgr;
+
     int ENERGY_DRINK_FIVE_PRICE = 5000;
     int ENERGY_DRINK_FIFTEEN_PRICE = 13000;
     int PARTY_TICKET = 8000;
@@ -315,6 +317,7 @@ public class GameMgr : MonoBehaviour {
     public void TouchWithoutArea()
     {
         ClosePopup();
+		_popup_mgr.PopupAniReady ();
     }
 
     private void ClosePopup()
@@ -329,21 +332,25 @@ public class GameMgr : MonoBehaviour {
     {
         // 팝업
         PopupMinerRecruitOpen(obj.name);
+		_popup_mgr.PopupAni ();
     }
 
     public void TouchFood(GameObject obj)
     {
         PopupFoodOpen(obj.name);
+		_popup_mgr.PopupAni ();
     }
 
     public void TouchMountain(GameObject obj)
     {
         PopupMountainOpen(obj.name);
+		_popup_mgr.PopupAni ();
     }
 
     public void TouchTrader(GameObject obj)
     {
         PopupTraderOpen(obj.name);
+		_popup_mgr.PopupAni ();
     }
 
     private void PopupTraderOpen(string menu_name)
@@ -355,6 +362,7 @@ public class GameMgr : MonoBehaviour {
     public void TouchWithoutAreaTrader()
     {
         ClosePopupTrader();
+		_popup_mgr.PopupAniReady ();
     }
 
     private void ClosePopupTrader()

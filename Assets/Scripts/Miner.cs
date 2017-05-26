@@ -29,7 +29,7 @@ public class Miner : MonoBehaviour
 
 	int MAX_LEVEL = 20;
 	float _life_time = 0f;
-	float MAX_LIFE_TIME = 300f; // 2분간 활동하면 기절상태에 빠지고 터치하면 다시 일어난다. 
+	float MAX_LIFE_TIME = 120f; // 2분간 활동하면 기절상태에 빠지고 터치하면 다시 일어난다. 
 
     void Start()
     {

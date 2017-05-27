@@ -5,6 +5,7 @@ using UnityEngine;
 public class Miner : MonoBehaviour
 {
     float _move_speed = 1.0f;
+	float DEFAULT_SPEED = 1.0f;
 
     public tk2dSprite _tkspr;
 	public tk2dSpriteAnimator _tkanim;
@@ -29,7 +30,10 @@ public class Miner : MonoBehaviour
 
 	int MAX_LEVEL = 20;
 	float _life_time = 0f;
-	float MAX_LIFE_TIME = 120f; // 2분간 활동하면 기절상태에 빠지고 터치하면 다시 일어난다. 
+	float MAX_LIFE_TIME = 60f; // 1분간 활동하면 기절상태에 빠지고 터치하면 다시 일어난다. 
+
+	bool _is_protect_stun = false; // 스턴방지용 약을 복용하였는가.
+	bool _is_party_ticket = false; // 파티티켓 스피드 상승 효과.
 
     void Start()
     {
@@ -69,18 +73,7 @@ public class Miner : MonoBehaviour
 			}
 		}
 
-		if (_state == State.Stunned)
-			return;
 
-		switch(_state)
-		{
-		case State.ToCart:
-			gameObject.transform.localPosition -= new Vector3(Time.deltaTime * _move_speed, 0f, 0f);
-			break;
-		case State.ToMine:
-			gameObject.transform.localPosition += new Vector3(Time.deltaTime * _move_speed, 0f, 0f);
-			break;
-		}
     }
 		
 	void StopStun()
@@ -101,8 +94,32 @@ public class Miner : MonoBehaviour
 		} 
 		else 
 		{
-			_life_time -= Time.fixedDeltaTime;
+			if(!_is_protect_stun)
+				_life_time -= Time.fixedDeltaTime;
 		}
+
+		if (_is_party_ticket) 
+		{
+			_move_speed = (DEFAULT_SPEED * 2f);
+		} 
+		else 
+		{
+			_move_speed = DEFAULT_SPEED;
+		}
+
+		if (_state == State.Stunned)
+			return;
+
+		switch(_state)
+		{
+		case State.ToCart:
+			gameObject.transform.localPosition -= new Vector3(Time.deltaTime * _move_speed, 0f, 0f);
+			break;
+		case State.ToMine:
+			gameObject.transform.localPosition += new Vector3(Time.deltaTime * _move_speed, 0f, 0f);
+			break;
+		}
+
 	}
 
     public void SetMyIdx(int id)
@@ -130,7 +147,7 @@ public class Miner : MonoBehaviour
             int get_gold = _miner_mgr.GetPerGold(_level);
             _homing_mgr.GoldGetEff();
 			_num_rolling_mgr.AddGold(get_gold);
-			Debug.Log("획득골드: " + get_gold);
+			//Debug.Log("획득골드: " + get_gold);
         }
 
         if(collision.collider.name == "mine")
@@ -167,5 +184,24 @@ public class Miner : MonoBehaviour
 		return false;
 	}
 
+	public void UseProtectStunPotion()
+	{
+		_is_protect_stun = true;
+	}
+
+	public void EndProtectStunPotion()
+	{
+		_is_protect_stun = false;
+	}
+
+	public void UsePartyTicket()
+	{
+		_is_party_ticket = true;
+	}
+
+	public void EndPartyTicket()
+	{
+		_is_party_ticket = false;
+	}
 
 }

@@ -34,6 +34,10 @@ public class GameMgr : MonoBehaviour {
         TRADER,
         TRADER_DETAIL,
         MINER_INFO,
+		PROTECT_STUN_POTION,
+		PROTECT_STUN_POTION_15,
+		PARTY_TICKET,
+		PARTY_TICKET3,
     }
     private PopState _ePop_state = PopState.MINER_RECRUIT;
 
@@ -72,15 +76,25 @@ public class GameMgr : MonoBehaviour {
                 SetMountainPrice();
                 break;
 
-            case PopState.TRADER:
-                break;
-
-            case PopState.TRADER_DETAIL:
-                break;
-
             case PopState.MINER_INFO:
                 SetMinerInfo();
                 break;
+
+			case PopState.PROTECT_STUN_POTION:
+				SetItemDetail ("BtnPotion");
+				break;
+
+			case PopState.PROTECT_STUN_POTION_15:
+				SetItemDetail ("BtnPotion15");
+				break;
+
+			case PopState.PARTY_TICKET:
+				SetItemDetail ("BtnPartyTicket");
+				break;
+			
+			case PopState.PARTY_TICKET3:
+				SetItemDetail ("BtnPartyTicket3");
+				break;
         }
     }
 
@@ -309,7 +323,42 @@ public class GameMgr : MonoBehaviour {
 					}
                 }
                 break;
-            
+
+			case PopState.PROTECT_STUN_POTION:
+				if (_lack_gold >= 0)
+				{
+					_miner_mgr.UseProtectStunPotions (_miner_mgr.MAX_PROTECT_STUN_POTION_TIME_5);
+					_cur_gold -= _need_price;
+					_num_rolling_mgr.AddGold (-_need_price);
+				}
+				break;
+
+			case PopState.PROTECT_STUN_POTION_15:
+				if (_lack_gold >= 0)
+				{
+					_miner_mgr.UseProtectStunPotions (_miner_mgr.MAX_PROTECT_STUN_POTION_TIME_15);
+					_cur_gold -= _need_price;
+					_num_rolling_mgr.AddGold (-_need_price);
+				}
+				break;
+
+			case PopState.PARTY_TICKET:
+				if (_lack_gold >= 0)
+				{
+					_miner_mgr.UsePartyTickets (_miner_mgr.MAX_PARTY_TIME1);
+					_cur_gold -= _need_price;
+					_num_rolling_mgr.AddGold (-_need_price);
+				}
+				break;
+
+			case PopState.PARTY_TICKET3:
+				if (_lack_gold >= 0)
+				{
+					_miner_mgr.UsePartyTickets (_miner_mgr.MAX_PARTY_TIME3);
+					_cur_gold -= _need_price;
+					_num_rolling_mgr.AddGold (-_need_price);
+				}
+				break;
         }
 
     }
@@ -384,28 +433,32 @@ public class GameMgr : MonoBehaviour {
     {
         switch(item_name)
         {
-            case "BtnPotion":
-                _lb_title.text = "<에너지드링크5>";
-                _lb_pop_content.text = "5분동안 광부들이 기절하지 않습니다.";
-                _need_price = ENERGY_DRINK_FIVE_PRICE;
-                break;
+			case "BtnPotion":
+					_lb_title.text = "<에너지드링크5>";
+					_lb_pop_content.text = "5분동안 광부들이 기절하지 않습니다.";
+					_need_price = ENERGY_DRINK_FIVE_PRICE;
+					_ePop_state = PopState.PROTECT_STUN_POTION;
+	                break;
 
-            case "BtnPotion15":
-                _lb_title.text = "<에너지드링크15>";
-                _lb_pop_content.text = "15분동안 광부들이 기절하지 않습니다.";
-                _need_price = ENERGY_DRINK_FIFTEEN_PRICE;
-                break;
+			case "BtnPotion15":
+					_lb_title.text = "<에너지드링크15>";
+					_lb_pop_content.text = "15분동안 광부들이 기절하지 않습니다.";
+					_need_price = ENERGY_DRINK_FIFTEEN_PRICE;
+					_ePop_state = PopState.PROTECT_STUN_POTION_15;
+	                break;
 
-            case "BtnPartyTicket":
-                _lb_title.text = "<파티티켓1>";
-                _lb_pop_content.text = "1분동안 파티를 열어 광부들의\n 이동속도를 2배로 늘립니다.";
-                _need_price = PARTY_TICKET;
-                break;
+			case "BtnPartyTicket":
+				_lb_title.text = "<파티티켓1>";
+				_lb_pop_content.text = "1분동안 파티를 열어 광부들의\n 이동속도를 2배로 늘립니다.";
+				_need_price = PARTY_TICKET;
+				_ePop_state = PopState.PARTY_TICKET;
+	                break;
 
-            case "BtnPartyTicket3":
-                _lb_title.text = "<파티티켓3>";
-                _lb_pop_content.text = "3분동안 파티를 열어 광부들의\n 이동속도를 2배로 늘립니다.";
-                _need_price = PARTY_TICKET_THREE;
+			case "BtnPartyTicket3":
+				_lb_title.text = "<파티티켓3>";
+				_lb_pop_content.text = "3분동안 파티를 열어 광부들의\n 이동속도를 2배로 늘립니다.";
+				_need_price = PARTY_TICKET_THREE;
+				_ePop_state = PopState.PARTY_TICKET3;
                 break;
 
             case "BtnEscalator":

@@ -28,6 +28,18 @@ public class MinerMgr : MonoBehaviour
 
 	int MAX_MINER_LEVEL = 20; // 광부의 다음레벨의 생산량을 확인하기 위해 필요하다.
 
+	public float MAX_PROTECT_STUN_POTION_TIME_5 = 300f;
+	public float MAX_PROTECT_STUN_POTION_TIME_15 = 900f;
+	public UILabel _lb_protect_stun_potion_time;
+	bool _is_protect_stun_potion = false;
+	float _protect_stun_potion_time = 0f;
+
+	public float MAX_PARTY_TIME1 = 60f;
+	public float MAX_PARTY_TIME3 = 180f;
+	public UILabel _lb_party_ticket_time;
+	bool _is_party_ticket = false;
+	float _party_ticket_time = 0f;
+
     void Start () 
     {
         _game_mgr = GameObject.Find("GameMgr").GetComponent<GameMgr>();
@@ -110,8 +122,31 @@ public class MinerMgr : MonoBehaviour
         }
 	}
 	
-	void Update () 
+	void FixedUpdate () 
     {
+		if (_is_protect_stun_potion) 
+		{
+			int minuete = (int)(_protect_stun_potion_time / 60);
+			int seconds = (int)(_protect_stun_potion_time % 60);
+			_lb_protect_stun_potion_time.text = minuete.ToString ("00") + " : " + seconds.ToString ("00"); 
+			_protect_stun_potion_time -= Time.fixedDeltaTime;
+			if (_protect_stun_potion_time < 0f) 
+			{
+				EndProtectStunPotions ();
+			}
+		}
+
+		if (_is_party_ticket) 
+		{
+			int minuete = (int)(_party_ticket_time / 60);
+			int seconds = (int)(_party_ticket_time % 60);
+			_lb_party_ticket_time.text = minuete.ToString ("00") + " : " + seconds.ToString ("00"); 
+			_party_ticket_time -= Time.fixedDeltaTime;
+			if (_party_ticket_time < 0f) 
+			{
+				EndPartyTickets();
+			}
+		}
 	}
 
     public void AddMiner()
@@ -244,6 +279,49 @@ public class MinerMgr : MonoBehaviour
 			return true;
 		}
 		return false;
+	}
+
+	// 전체 광부들은 n 분동안 스턴 방지.
+	public void UseProtectStunPotions(float ntime)
+	{
+		_is_protect_stun_potion = true;
+		_protect_stun_potion_time = ntime;
+
+		foreach(KeyValuePair<int, Miner>kv in _miners)
+		{
+			kv.Value.UseProtectStunPotion ();
+		}
+	}
+
+	private void EndProtectStunPotions()
+	{
+		_lb_protect_stun_potion_time.text = "";
+		_is_protect_stun_potion = false;
+		foreach(KeyValuePair<int, Miner>kv in _miners)
+		{
+			kv.Value.EndProtectStunPotion ();
+		}
+	}
+
+	public void UsePartyTickets(float ntime)
+	{
+		_is_party_ticket = true;
+		_party_ticket_time = ntime;
+
+		foreach(KeyValuePair<int, Miner>kv in _miners)
+		{
+			kv.Value.UsePartyTicket ();
+		}
+	}
+
+	private void EndPartyTickets()
+	{
+		_lb_party_ticket_time.text = "";
+		_is_party_ticket = false;
+		foreach(KeyValuePair<int, Miner>kv in _miners)
+		{
+			kv.Value.EndPartyTicket ();
+		}
 	}
 
 }

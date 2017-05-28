@@ -44,6 +44,10 @@ public class MinerMgr : MonoBehaviour
 
 	private bool _isget_warp = false;
 
+	int ADDITIONAL_SPEED = 0;
+	int ADDITIONAL_GOLD_PERCENT = 0;
+
+
     void Start () 
     {
         _game_mgr = GameObject.Find("GameMgr").GetComponent<GameMgr>();
@@ -70,7 +74,7 @@ public class MinerMgr : MonoBehaviour
         _miner_recruit_price_table.Add(18, 300000);
         _miner_recruit_price_table.Add(19, 600000);
 
-        _per_gold_by_miner_level_table.Add(1, 150000);
+        _per_gold_by_miner_level_table.Add(1, 15);
         _per_gold_by_miner_level_table.Add(2, 25);
         _per_gold_by_miner_level_table.Add(3, 50);
         _per_gold_by_miner_level_table.Add(4, 75);
@@ -354,4 +358,25 @@ public class MinerMgr : MonoBehaviour
 		return _isget_warp;
 	}
 
+	public void UseMagicPapers()
+	{
+		int add_v = Random.Range (5, 16);
+		ADDITIONAL_SPEED = add_v;
+		ADDITIONAL_GOLD_PERCENT = add_v;
+	}
+
+	public float GetAdditionalSpeed(float move_spd)
+	{
+		float t = ((float)ADDITIONAL_SPEED) * 0.01f;
+		float add_speed = t * move_spd;
+		return add_speed;
+	}
+
+	public int GetAdditionalGold(int get_gold)
+	{
+		float t = ((float)ADDITIONAL_GOLD_PERCENT) * 0.01f;
+		float t2 = t * (float)get_gold;
+		int add_gold = (int)t2;
+		return add_gold;
+	}
 }

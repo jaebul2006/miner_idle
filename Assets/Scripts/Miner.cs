@@ -42,6 +42,7 @@ public class Miner : MonoBehaviour
 	float CLOSEST_CART_X = -0.76f;
 	float CLOSEST_MINE_X = 5.17f;
 
+
     void Start()
     {
         _tkspr.FlipX = false;
@@ -124,6 +125,9 @@ public class Miner : MonoBehaviour
 
 		TryWarp ();
 
+		float add_speed = _miner_mgr.GetAdditionalSpeed (_move_speed);
+		_move_speed += add_speed;
+
 		switch(_state)
 		{
 		case State.ToCart:
@@ -159,9 +163,11 @@ public class Miner : MonoBehaviour
             _state = State.ToMine;
             _tkspr.FlipX = true;
             int get_gold = _miner_mgr.GetPerGold(_level);
+			int add_gold = _miner_mgr.GetAdditionalGold (get_gold);
+			get_gold += add_gold;
+			Debug.Log ("획득골드:" + get_gold);
             _homing_mgr.GoldGetEff();
 			_num_rolling_mgr.AddGold(get_gold);
-			//Debug.Log("획득골드: " + get_gold);
         }
 
         if(collision.collider.name == "mine")

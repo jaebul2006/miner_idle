@@ -40,6 +40,7 @@ public class GameMgr : MonoBehaviour {
 		PARTY_TICKET3,
 		ESCALATOR,
 		WARP,
+		MAGIC_PAPER,
     }
     private PopState _ePop_state = PopState.MINER_RECRUIT;
 
@@ -104,6 +105,10 @@ public class GameMgr : MonoBehaviour {
 
 			case PopState.WARP:
 				SetItemDetail ("BtnWarp");
+				break;
+
+			case PopState.MAGIC_PAPER:
+				SetItemDetail ("BtnMagicPaper");
 				break;
         }
     }
@@ -387,6 +392,15 @@ public class GameMgr : MonoBehaviour {
 					_num_rolling_mgr.AddGold (-_need_price);
 				}
 				break;
+
+			case PopState.MAGIC_PAPER:
+				if (_lack_gold >= 0)
+				{
+					_miner_mgr.UseMagicPapers ();
+					_cur_gold -= _need_price;
+					_num_rolling_mgr.AddGold (-_need_price);
+				}
+				break;
         }
 
     }
@@ -503,11 +517,12 @@ public class GameMgr : MonoBehaviour {
 				_ePop_state = PopState.WARP;
                 break;
 
-            case "BtnMagicPaper":
-                _lb_title.text = "<마법주문서>";
-                _lb_pop_content.text = "일정확률로 광부의 골드획득량과 속도를 5%~15% 증가시킵니다. 재구매시 확률은 다시 지정됩니다";
-                _need_price = MAGIC_PAPER;
-                break;
+			case "BtnMagicPaper":
+				_lb_title.text = "<마법주문서>";
+				_lb_pop_content.text = "일정확률로 광부의 골드획득량과 속도를 5%~15% 증가시킵니다. 재구매시 확률은 다시 지정됩니다";
+				_need_price = MAGIC_PAPER;
+				_ePop_state = PopState.MAGIC_PAPER;
+	                break;
         }
         _lb_pop_level.text = "";
         _lb_pop_price.text = _need_price.ToString();

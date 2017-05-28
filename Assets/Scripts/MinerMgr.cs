@@ -40,6 +40,10 @@ public class MinerMgr : MonoBehaviour
 	bool _is_party_ticket = false;
 	float _party_ticket_time = 0f;
 
+	private bool _isget_escalator = false;
+
+	private bool _isget_warp = false;
+
     void Start () 
     {
         _game_mgr = GameObject.Find("GameMgr").GetComponent<GameMgr>();
@@ -322,6 +326,32 @@ public class MinerMgr : MonoBehaviour
 		{
 			kv.Value.EndPartyTicket ();
 		}
+	}
+
+	public void UseEscalators()
+	{
+		_isget_escalator = true;
+
+		foreach(KeyValuePair<int, Miner>kv in _miners)
+		{
+			kv.Value.UseEscalator ();
+		}
+	}
+
+	public bool IsGetEscalator()
+	{
+		return _isget_escalator;
+	}
+
+	// 모든 광부들은 일정확률로 워프기능을 가진다.
+	public void UseWarps()
+	{
+		_isget_warp = true;
+	}
+
+	public bool IsGetWarp()
+	{
+		return _isget_warp;
 	}
 
 }

@@ -38,6 +38,8 @@ public class GameMgr : MonoBehaviour {
 		PROTECT_STUN_POTION_15,
 		PARTY_TICKET,
 		PARTY_TICKET3,
+		ESCALATOR,
+		WARP,
     }
     private PopState _ePop_state = PopState.MINER_RECRUIT;
 
@@ -47,9 +49,9 @@ public class GameMgr : MonoBehaviour {
     int ENERGY_DRINK_FIFTEEN_PRICE = 13000;
     int PARTY_TICKET = 8000;
     int PARTY_TICKET_THREE = 20000;
-    int ESCALATOR = 10000000;
-    int WARP = 30000000;
-    int MAGIC_PAPER = 99999999;
+    int ESCALATOR = 60000;
+    int WARP = 50000;
+    int MAGIC_PAPER = 30000;
 
     void Start ()
     {
@@ -94,6 +96,14 @@ public class GameMgr : MonoBehaviour {
 			
 			case PopState.PARTY_TICKET3:
 				SetItemDetail ("BtnPartyTicket3");
+				break;
+
+			case PopState.ESCALATOR:
+				SetItemDetail ("BtnEscalator");
+				break;
+
+			case PopState.WARP:
+				SetItemDetail ("BtnWarp");
 				break;
         }
     }
@@ -359,6 +369,24 @@ public class GameMgr : MonoBehaviour {
 					_num_rolling_mgr.AddGold (-_need_price);
 				}
 				break;
+
+			case PopState.ESCALATOR:
+				if (_lack_gold >= 0)
+				{
+					_miner_mgr.UseEscalators ();
+					_cur_gold -= _need_price;
+					_num_rolling_mgr.AddGold (-_need_price);
+				}
+				break;
+
+			case PopState.WARP:
+				if (_lack_gold >= 0)
+				{
+					_miner_mgr.UseWarps ();
+					_cur_gold -= _need_price;
+					_num_rolling_mgr.AddGold (-_need_price);
+				}
+				break;
         }
 
     }
@@ -461,16 +489,18 @@ public class GameMgr : MonoBehaviour {
 				_ePop_state = PopState.PARTY_TICKET3;
                 break;
 
-            case "BtnEscalator":
-                _lb_title.text = "<에스컬레이터>";
-                _lb_pop_content.text = "모든 광부들의 이동속도를 1증가 시킵니다.";
-                _need_price = ESCALATOR;
+			case "BtnEscalator":
+				_lb_title.text = "<에스컬레이터>";
+				_lb_pop_content.text = "모든 광부들의 이동속도를 30% 증가 시킵니다.";
+				_need_price = ESCALATOR;
+				_ePop_state = PopState.ESCALATOR;
                 break;
 
-            case "BtnWarp":
-                _lb_title.text = "<순간이동장치>";
-                _lb_pop_content.text = "일정확률로 광부를 순간이동시킵니다. 쿨타임이 존재합니다";
-                _need_price = WARP;
+			case "BtnWarp":
+				_lb_title.text = "<순간이동장치>";
+				_lb_pop_content.text = "일정확률로 광부를 순간이동시킵니다. 쿨타임이 존재합니다";
+				_need_price = WARP;
+				_ePop_state = PopState.WARP;
                 break;
 
             case "BtnMagicPaper":

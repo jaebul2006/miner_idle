@@ -6,6 +6,7 @@ public class Miner : MonoBehaviour
 {
     float _move_speed = 1.0f;
 	float DEFAULT_SPEED = 1.0f;
+	float GET_ESCALATOR_SPEED = 1.3f;
 
     public tk2dSprite _tkspr;
 	public tk2dSpriteAnimator _tkanim;
@@ -35,6 +36,12 @@ public class Miner : MonoBehaviour
 	bool _is_protect_stun = false; // 스턴방지용 약을 복용하였는가.
 	bool _is_party_ticket = false; // 파티티켓 스피드 상승 효과.
 
+	float WARP_COOL_TIME = 5f;
+	float _cur_warp_cool_time = 0f;
+
+	float CLOSEST_CART_X = -0.76f;
+	float CLOSEST_MINE_X = 5.17f;
+
     void Start()
     {
         _tkspr.FlipX = false;
@@ -43,6 +50,11 @@ public class Miner : MonoBehaviour
 		_num_rolling_mgr = GameObject.Find ("NumberRollingMgr").GetComponent<NumberRollingMgr> ();
 		_life_time = MAX_LIFE_TIME;
 		_prev_state = _state;
+		if (_miner_mgr.IsGetEscalator()) 
+		{
+			UseEscalator ();
+		}
+
     }
 
     void Update()
@@ -109,6 +121,8 @@ public class Miner : MonoBehaviour
 
 		if (_state == State.Stunned)
 			return;
+
+		TryWarp ();
 
 		switch(_state)
 		{
@@ -202,6 +216,54 @@ public class Miner : MonoBehaviour
 	public void EndPartyTicket()
 	{
 		_is_party_ticket = false;
+	}
+
+	// 영구적으로 기본 스피드가 30% 증가. 
+	public void UseEscalator()
+	{
+		DEFAULT_SPEED = GET_ESCALATOR_SPEED;
+	}
+
+	private void TryWarp()
+	{
+		if (_miner_mgr.IsGetWarp ()) 
+		{
+			_cur_warp_cool_time += Time.fixedDeltaTime;
+			/*if (_cur_warp_cool_time > WARP_COOL_TIME) 
+			{
+				_cur_warp_cool_time = 0f;
+				int warp_chance = Random.Range (0, 10);
+				if (warp_chance < 4) 
+				{
+					if (_state == State.ToCart) 
+					{
+					} 
+					else if (_state == State.ToMine) 
+					{
+					}
+				}
+			}*/
+			if (_cur_warp_cool_time > WARP_COOL_TIME) 
+			{
+				if (_state == State.ToCart) 
+				{
+					float c_v = gameObject.transform.localPosition.x;
+					float test_v = c_v - 1f;
+					if (test_v < CLOSEST_CART_X)
+						test_v = CLOSEST_CART_X;
+					gameObject.transform.localPosition = new Vector3(test_v, gameObject.transform.localPosition.y, gameObject.transform.localPosition.z);
+				} 
+				else if (_state == State.ToMine) 
+				{
+					float c_v = gameObject.transform.localPosition.x;
+					float test_v = c_v + 1f;
+					if (test_v > CLOSEST_MINE_X) 
+						test_v = CLOSEST_MINE_X;
+					gameObject.transform.localPosition = new Vector3 (test_v, gameObject.transform.localPosition.y, gameObject.transform.localPosition.z);
+				}
+				_cur_warp_cool_time = 0f;
+			}
+		}
 	}
 
 }

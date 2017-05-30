@@ -11,21 +11,21 @@ public class Miner : MonoBehaviour
     public tk2dSprite _tkspr;
 	public tk2dSpriteAnimator _tkanim;
 
-	int _level = 1;
+	public int _level = 1;
     GameObject _myobj_menu;
-    int _idx;
+    public int _idx;
     private tk2dSprite _tk_label_spr;
     MinerMgr _miner_mgr;
     HomingMgr _homing_mgr;
 
-    enum State
+    public enum State
     {
         ToCart = 0,
         ToMine,
 		Stunned,
     }
 
-    private State _state = State.ToCart;
+    public State _state = State.ToCart;
 	private State _prev_state;
 	NumberRollingMgr _num_rolling_mgr;
 

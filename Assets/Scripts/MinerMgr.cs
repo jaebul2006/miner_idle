@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class MinerMgr : MonoBehaviour 
 {
-
+	
     private int _miner_cnt;
     public Dictionary<int, Miner> _miners = new Dictionary<int, Miner>();
-    Dictionary<int, int> _miner_recruit_price_table = new Dictionary<int, int>();
+	Dictionary<int, int> _miner_recruit_price_table = new Dictionary<int, int>();
     Dictionary<int, int> _per_gold_by_miner_level_table = new Dictionary<int, int>();
     Dictionary<int, int> _miner_levelup_price_table = new Dictionary<int, int>();
     Dictionary<int, float> _miner_speed_table = new Dictionary<int, float>();
@@ -360,7 +361,7 @@ public class MinerMgr : MonoBehaviour
 
 	public void UseMagicPapers()
 	{
-		int add_v = Random.Range (5, 16);
+		int add_v = UnityEngine.Random.Range (5, 16);
 		ADDITIONAL_SPEED = add_v;
 		ADDITIONAL_GOLD_PERCENT = add_v;
 	}
@@ -379,4 +380,30 @@ public class MinerMgr : MonoBehaviour
 		int add_gold = (int)t2;
 		return add_gold;
 	}
+
+	//  Auto Save Test
+	void OnApplicationQuit()
+	{
+		string json_data = "";
+		foreach (KeyValuePair<int, Miner>kv in _miners) 
+		{
+			MinerInfo m = new MinerInfo ();
+			m.id = kv.Value._idx;
+			m.level = kv.Value._level;
+			m.position = kv.Value.transform.localPosition;
+			m.state = kv.Value._state.ToString ();
+			json_data += (JsonUtility.ToJson(m) + "\n");
+		}
+		Debug.Log (json_data);
+	}
+
+}
+	
+[Serializable]
+public class MinerInfo
+{
+	public int id;
+	public int level;
+	public Vector3 position;
+	public string state;
 }

@@ -26,7 +26,7 @@ public class Miner : MonoBehaviour
     }
 
     public State _state = State.ToCart;
-	private State _prev_state;
+	public State _prev_state;
 	NumberRollingMgr _num_rolling_mgr;
 
 	int MAX_LEVEL = 20;

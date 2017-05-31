@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.IO;
 
 public class MinerMgr : MonoBehaviour 
 {
 	
-    private int _miner_cnt;
     public Dictionary<int, Miner> _miners = new Dictionary<int, Miner>();
 	Dictionary<int, int> _miner_recruit_price_table = new Dictionary<int, int>();
     Dictionary<int, int> _per_gold_by_miner_level_table = new Dictionary<int, int>();
@@ -129,6 +129,9 @@ public class MinerMgr : MonoBehaviour
             mountain_upgrade_price = default_mountain_upgrade_price + (default_mountain_upgrade_price * i);
             _mountain_upgrade_price_table.Add(i + 1, mountain_upgrade_price);
         }
+
+		// Auto Load
+		AutoLoad();
 	}
 	
 	void FixedUpdate () 
@@ -161,15 +164,29 @@ public class MinerMgr : MonoBehaviour
     public void AddMiner()
     {
         GameObject miner = Instantiate(Resources.Load("Prefabs/miner")) as GameObject;
-        miner.name = "miner" + _miner_cnt;
+		miner.name = "miner" + _miners.Count;
         miner.transform.parent = GameObject.Find("Miners").transform;
         miner.transform.localPosition = new Vector3(3.58f, -1.93f, 0f);
         miner.transform.localScale = Vector3.one;
-        _miners.Add(_miner_cnt, miner.GetComponent<Miner>());
-        miner.GetComponent<Miner>().SetMyIdx(_miner_cnt);
-        _miner_cnt++;
+		miner.GetComponent<Miner>().SetMyIdx(_miners.Count);
+		_miners.Add(_miners.Count, miner.GetComponent<Miner>());
         UpdateMinerSpeed();
     }
+
+	private void AddMinerFromFile(MinerInfo m_info)
+	{
+		GameObject miner = Instantiate(Resources.Load("Prefabs/miner")) as GameObject;
+		miner.name = "miner" + m_info.id;
+		miner.transform.parent = GameObject.Find("Miners").transform;
+		miner.transform.localPosition = m_info.position;
+		miner.transform.localScale = Vector3.one;
+		miner.GetComponent<Miner>().SetMyIdx(m_info.id);
+		miner.GetComponent<Miner> ()._state = m_info.state;
+		miner.GetComponent<Miner> ()._prev_state = m_info.prev_state;
+		_miners.Add(m_info.id, miner.GetComponent<Miner>());
+		_cur_miners_speed = m_info.speed;
+		UpdateMinerSpeed ();
+	}
 
     public void AddMinerSpeed()
     {
@@ -204,7 +221,7 @@ public class MinerMgr : MonoBehaviour
 
     public int GetRecruitLevel()
     {
-        return _miner_cnt;
+		return _miners.Count;
     }
 
     public int GetSpeedLevel()
@@ -384,17 +401,42 @@ public class MinerMgr : MonoBehaviour
 	//  Auto Save Test
 	void OnApplicationQuit()
 	{
-		string json_data = "";
+		AutoSave ();
+	}
+
+	private void AutoSave()
+	{
+		StreamWriter sw = new StreamWriter (Application.persistentDataPath + "/test_save.txt");
 		foreach (KeyValuePair<int, Miner>kv in _miners) 
 		{
 			MinerInfo m = new MinerInfo ();
 			m.id = kv.Value._idx;
 			m.level = kv.Value._level;
 			m.position = kv.Value.transform.localPosition;
-			m.state = kv.Value._state.ToString ();
-			json_data += (JsonUtility.ToJson(m) + "\n");
+			m.state = kv.Value._state;
+			m.prev_state = kv.Value._prev_state;
+			m.speed = _cur_miners_speed;
+			sw.WriteLine (JsonUtility.ToJson (m));
 		}
-		Debug.Log (json_data);
+		sw.Close ();
+	}
+
+	private void AutoLoad()
+	{
+		string save_path = Application.persistentDataPath + "/test_save.txt";
+		if (File.Exists (save_path)) 
+		{
+			StreamReader sr = new StreamReader (save_path);
+			string line = "";
+			while ((line = sr.ReadLine()) != null) 
+			{
+				string m_info = line;
+				MinerInfo m = JsonUtility.FromJson<MinerInfo>(m_info);
+				Debug.Log(m.id);
+				AddMinerFromFile(m);
+			}
+			sr.Close ();
+		}
 	}
 
 }
@@ -405,5 +447,7 @@ public class MinerInfo
 	public int id;
 	public int level;
 	public Vector3 position;
-	public string state;
+	public Miner.State state;
+	public Miner.State prev_state;
+	public float speed;
 }

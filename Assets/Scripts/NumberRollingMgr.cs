@@ -127,64 +127,45 @@ public class NumberRollingMgr : MonoBehaviour
         return s - dis;
     }
 
-    void OnApplicationPause()
-    {
-        AutoSave();
-    }
+	void OnApplicationPause(bool pause)
+	{
+		if (pause)
+		{
+			AutoSave ();
+		}
+	}
 
-    void OnApplicationQuit()
-    {
-        AutoSave();
-    }
+//	void OnApplicationQuit()
+//	{
+//		AutoSave ();
+//	}
 
     private void AutoSave()
     {
-        //string filename = Application.persistentDataPath + "/gold_save.txt";
-        //StreamWriter sw = new StreamWriter(filename);
-        //GoldInfo gi = new GoldInfo();
-        //gi.gold = _gold_value;
-        //sw.WriteLine(JsonUtility.ToJson(gi));
-        //sw.Close();
-
-        string path = "Assets/Resources/gold_save.txt";
-        StreamWriter writer = new StreamWriter(path, true);
+        string filename = Application.persistentDataPath + "/gold_save.txt";
+        StreamWriter sw = new StreamWriter(filename);
         GoldInfo gi = new GoldInfo();
         gi.gold = _gold_value;
-        writer.WriteLine(JsonUtility.ToJson(gi));
-        writer.Close();
+        sw.WriteLine(JsonUtility.ToJson(gi));
+        sw.Close();
     }
 
     private void AutoLoad()
     {
-        //string save_path = Application.persistentDataPath + "/gold_save.txt";
-        //if (File.Exists(save_path))
-        //{
-        //    StreamReader sr = new StreamReader(save_path);
-        //    string line = "";
-        //    while ((line = sr.ReadLine()) != null)
-        //    {
-        //        string g_info = line;
-        //        GoldInfo gi = JsonUtility.FromJson<GoldInfo>(g_info);
-        //        _gold_value = gi.gold;
-        //        InitValue(0, _gold_value);
-        //    }
-        //    sr.Close();
-        //}
-
-        TextAsset txt_asset = (TextAsset)Resources.Load("Save/gold_save") as TextAsset;
-        StringReader reader = new StringReader(txt_asset.text);
-        if (reader != null)
-        {
-            string line;
-            while ((line = reader.ReadLine()) != null)
-            {
-                string g_info = line;
+		string filename = Application.persistentDataPath + "/gold_save.txt";
+		if(File.Exists(filename))
+		{
+			StreamReader sr = new StreamReader (filename);
+			string line = "";
+			while ((line = sr.ReadLine()) != null)
+			{
+				string g_info = line;
                 GoldInfo gi = JsonUtility.FromJson<GoldInfo>(g_info);
                 _gold_value = gi.gold;
                 InitValue(0, _gold_value);
-            }
-            reader.Close();
-        }
+			}
+			sr.Close ();
+		}
     }
 
 }

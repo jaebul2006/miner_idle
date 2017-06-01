@@ -199,6 +199,7 @@ public class MinerMgr : MonoBehaviour
 		miner.transform.localScale = Vector3.one;
 		miner.GetComponent<Miner>().SetMyIdx(m_info.id);
         miner.GetComponent<Miner>().SetState(m_info.state, m_info.prev_state);
+		miner.GetComponent<Miner> ()._level = m_info.level;
 		_miners.Add(m_info.id, miner.GetComponent<Miner>());
 		_cur_miners_speed = m_info.speed;
 		UpdateMinerSpeed ();
@@ -414,79 +415,52 @@ public class MinerMgr : MonoBehaviour
 		return add_gold;
 	}
 
-	//  Auto Save Test
-    void OnApplicationPause()
-    {
-        AutoSave();
-    }
+	void OnApplicationPause(bool pause)
+	{
+		if (pause)
+		{
+			AutoSave ();
+		}
+	}
 
-    //void OnApplicationQuit()
-    //{
-    //    AutoSave();
-    //}
+//	void OnApplicationQuit()
+//	{
+//		AutoSave ();
+//	}
+//
+	public void TouchSaveBtn()
+	{
+		AutoSave ();
+	}
 
+	// 자 동 저 장.
 	private void AutoSave()
 	{
-        //string filename = Application.persistentDataPath + "/miners_save.txt";
-        //StreamWriter sw = new StreamWriter (filename);
-        //foreach (KeyValuePair<int, Miner>kv in _miners) 
-        //{
-        //    MinerInfo m = new MinerInfo ();
-        //    m.id = kv.Value._idx;
-        //    m.level = kv.Value._level;
-        //    m.position = kv.Value.transform.localPosition;
-        //    m.state = kv.Value._state;
-        //    m.prev_state = kv.Value._prev_state;
-        //    m.speed = _cur_miners_speed;
-        //    sw.WriteLine (JsonUtility.ToJson (m));
-        //}
-        //sw.Close ();
-
-        //filename = Application.persistentDataPath + "/cap_save.txt";
-        //sw = new StreamWriter(filename);
-        //CapInfo ci = new CapInfo();
-        //ci.mountain_level = _mountain_level;
-        //ci.miners_speed_level = _miners_speed_level;
-        //sw.WriteLine(JsonUtility.ToJson(ci));
-        //sw.Close();
-
-        //filename = Application.persistentDataPath + "/item_save.txt";
-        //sw = new StreamWriter(filename);
-        //ItemInfo ii = new ItemInfo();
-        //ii.stun_protection_time = _protect_stun_potion_time;
-        //ii.party_time = _party_ticket_time;
-        //ii.escalator = _isget_escalator;
-        //ii.warp = _isget_warp;
-        //ii.add_spd_per = ADDITIONAL_SPEED_PERCENT;
-        //ii.add_gold_per = ADDITIONAL_GOLD_PERCENT;
-        //sw.WriteLine(JsonUtility.ToJson(ii));
-        //sw.Close();
-
-        string path = "Assets/Resources/miners_save.txt";
-        StreamWriter writer = new StreamWriter(path, true);
-        foreach (KeyValuePair<int, Miner> kv in _miners)
+        string filename = Application.persistentDataPath + "/miners_save.txt";
+        StreamWriter sw = new StreamWriter (filename);
+        foreach (KeyValuePair<int, Miner>kv in _miners) 
         {
-            MinerInfo m = new MinerInfo();
+            MinerInfo m = new MinerInfo ();
             m.id = kv.Value._idx;
             m.level = kv.Value._level;
             m.position = kv.Value.transform.localPosition;
             m.state = kv.Value._state;
             m.prev_state = kv.Value._prev_state;
             m.speed = _cur_miners_speed;
-            writer.WriteLine(JsonUtility.ToJson(m));
+            sw.WriteLine (JsonUtility.ToJson (m));
         }
-        writer.Close();
+        sw.Close ();
 
-        path = "Assets/Resources/cap_save.txt";
-        writer = new StreamWriter(path, true);
+        filename = Application.persistentDataPath + "/cap_save.txt";
+        sw = new StreamWriter(filename);
         CapInfo ci = new CapInfo();
         ci.mountain_level = _mountain_level;
         ci.miners_speed_level = _miners_speed_level;
-        writer.WriteLine(JsonUtility.ToJson(ci));
-        writer.Close();
+        sw.WriteLine(JsonUtility.ToJson(ci));
+        sw.Close();
 
-        path = "Assets/Resources/item_save.txt";
-        writer = new StreamWriter(path, true);
+        filename = Application.persistentDataPath + "/item_save.txt";
+        sw = new StreamWriter(filename);
         ItemInfo ii = new ItemInfo();
         ii.stun_protection_time = _protect_stun_potion_time;
         ii.party_time = _party_ticket_time;
@@ -494,73 +468,67 @@ public class MinerMgr : MonoBehaviour
         ii.warp = _isget_warp;
         ii.add_spd_per = ADDITIONAL_SPEED_PERCENT;
         ii.add_gold_per = ADDITIONAL_GOLD_PERCENT;
-        writer.WriteLine(JsonUtility.ToJson(ii));
-        writer.Close();
+        sw.WriteLine(JsonUtility.ToJson(ii));
+        sw.Close();
 	}
 
+	// 자 동 로 드.
 	private void AutoLoad()
 	{
-    
-        TextAsset txt_asset = (TextAsset)Resources.Load("Save/miners_save") as TextAsset;
-        StringReader reader = new StringReader(txt_asset.text);
-        if (reader != null)
-        {
-            string line;
-            while ((line = reader.ReadLine()) != null)
-            {
-                string m_info = line;
-                MinerInfo m = JsonUtility.FromJson<MinerInfo>(m_info);
-                AddMinerFromFile(m);
-                _game_mgr.TouchFirstPopupOK(); // 광부가 한명이라도 있으면 고용하라는 메시지창 안띄우기.
-            }
-            reader.Close();
-        }
+		string filename = Application.persistentDataPath + "/miners_save.txt";
+		if(File.Exists(filename))
+		{
+			StreamReader sr = new StreamReader (filename);
+			string line = "";
+			while ((line = sr.ReadLine()) != null)
+			{
+				string m_info = line;
+				MinerInfo m = JsonUtility.FromJson<MinerInfo> (m_info);
+				AddMinerFromFile (m);
+				_game_mgr.TouchFirstPopupOK ();
+			}
+			sr.Close ();
+		}
 
-        txt_asset = (TextAsset)Resources.Load("Save/cap_save") as TextAsset;
-        reader = new StringReader(txt_asset.text);
-        if (reader != null)
-        {
-            string line;
-            while ((line = reader.ReadLine()) != null)
-            {
-                string c_info = line;
-                CapInfo ci = JsonUtility.FromJson<CapInfo>(c_info);
-                _mountain_level = ci.mountain_level;
-                _miners_speed_level = ci.miners_speed_level;
-            }
-            reader.Close();
-        }
+		filename = Application.persistentDataPath + "/cap_save.txt";
+		if (File.Exists (filename)) 
+		{
+			StreamReader sr = new StreamReader (filename);
+			string line = "";
+			while ((line = sr.ReadLine ()) != null) {
+				string c_info = line;
+				CapInfo ci = JsonUtility.FromJson<CapInfo> (c_info);
+				_mountain_level = ci.mountain_level;
+				_miners_speed_level = ci.miners_speed_level;
+			}
+			sr.Close ();
+		}
 
-        txt_asset = (TextAsset)Resources.Load("Save/item_save") as TextAsset;
-        reader = new StringReader(txt_asset.text);
-        if (reader != null)
-        {
-            string line;
-            while ((line = reader.ReadLine()) != null)
-            {
-                string i_info = line;
-                ItemInfo ii = JsonUtility.FromJson<ItemInfo>(i_info);
-                if (ii.stun_protection_time > 0f)
-                {
-                    UseProtectStunPotions(ii.stun_protection_time);
-                }
-                if (ii.party_time > 0f)
-                {
-                    UsePartyTickets(ii.party_time);
-                }
-                if (ii.escalator)
-                {
-                    UseEscalators();
-                }
-                if (ii.warp)
-                {
-                    UseWarps();
-                }
-                ADDITIONAL_SPEED_PERCENT = ii.add_spd_per;
-                ADDITIONAL_GOLD_PERCENT = ii.add_gold_per;
-            }
-            reader.Close();
-        }
+		filename = Application.persistentDataPath + "/item_save.txt";
+		if (File.Exists (filename)) 
+		{
+			StreamReader sr = new StreamReader (filename);
+			string line = "";
+			while ((line = sr.ReadLine ()) != null) {
+				string i_info = line;
+				ItemInfo ii = JsonUtility.FromJson<ItemInfo> (i_info);
+				if (ii.stun_protection_time > 0f) {
+					UseProtectStunPotions (ii.stun_protection_time);
+				}
+				if (ii.party_time > 0f) {
+					UsePartyTickets (ii.party_time);
+				}
+				if (ii.escalator) {
+					UseEscalators ();
+				}
+				if (ii.warp) {
+					UseWarps ();
+				}
+				ADDITIONAL_SPEED_PERCENT = ii.add_spd_per;
+				ADDITIONAL_GOLD_PERCENT = ii.add_gold_per;
+			}
+			sr.Close ();
+		}
     }
 
 }

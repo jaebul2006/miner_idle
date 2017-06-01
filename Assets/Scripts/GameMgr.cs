@@ -333,6 +333,7 @@ public class GameMgr : MonoBehaviour {
 					if (!_miner_mgr._miners [_cur_selected_miner_idx].IsMaxLevel ()) 
 					{
 						_miner_mgr._miners [_cur_selected_miner_idx].LevelUp ();
+						//_miner_mgr._miners[_cur_selected_miner_idx]._level = _miner_mgr._miners [_cur_selected_miner_idx].GetLevel ();
 						_cur_gold -= _need_price;
 						_num_rolling_mgr.AddGold (-_need_price);
 					}

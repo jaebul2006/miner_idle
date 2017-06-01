@@ -1,1 +1,0 @@
-{"mountain_level":1,"miners_speed_level":1}

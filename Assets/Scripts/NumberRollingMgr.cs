@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
+using System;
 
 public class NumberRollingMgr : MonoBehaviour
 {
@@ -22,12 +24,9 @@ public class NumberRollingMgr : MonoBehaviour
         _list_gold.Clear();
     }
 
-    void Update()
+    void Start()
     {
-        if(Input.GetMouseButtonUp(0))
-        {
-            
-        }
+        AutoLoad();
     }
 
     public int GetTotalGold()
@@ -127,4 +126,71 @@ public class NumberRollingMgr : MonoBehaviour
         // 시작 값이 목표 값보다 클 경우 시작값에 이동거리를 빼고 return
         return s - dis;
     }
+
+    void OnApplicationPause()
+    {
+        AutoSave();
+    }
+
+    void OnApplicationQuit()
+    {
+        AutoSave();
+    }
+
+    private void AutoSave()
+    {
+        //string filename = Application.persistentDataPath + "/gold_save.txt";
+        //StreamWriter sw = new StreamWriter(filename);
+        //GoldInfo gi = new GoldInfo();
+        //gi.gold = _gold_value;
+        //sw.WriteLine(JsonUtility.ToJson(gi));
+        //sw.Close();
+
+        string path = "Assets/Resources/gold_save.txt";
+        StreamWriter writer = new StreamWriter(path, true);
+        GoldInfo gi = new GoldInfo();
+        gi.gold = _gold_value;
+        writer.WriteLine(JsonUtility.ToJson(gi));
+        writer.Close();
+    }
+
+    private void AutoLoad()
+    {
+        //string save_path = Application.persistentDataPath + "/gold_save.txt";
+        //if (File.Exists(save_path))
+        //{
+        //    StreamReader sr = new StreamReader(save_path);
+        //    string line = "";
+        //    while ((line = sr.ReadLine()) != null)
+        //    {
+        //        string g_info = line;
+        //        GoldInfo gi = JsonUtility.FromJson<GoldInfo>(g_info);
+        //        _gold_value = gi.gold;
+        //        InitValue(0, _gold_value);
+        //    }
+        //    sr.Close();
+        //}
+
+        TextAsset txt_asset = (TextAsset)Resources.Load("Save/gold_save") as TextAsset;
+        StringReader reader = new StringReader(txt_asset.text);
+        if (reader != null)
+        {
+            string line;
+            while ((line = reader.ReadLine()) != null)
+            {
+                string g_info = line;
+                GoldInfo gi = JsonUtility.FromJson<GoldInfo>(g_info);
+                _gold_value = gi.gold;
+                InitValue(0, _gold_value);
+            }
+            reader.Close();
+        }
+    }
+
+}
+
+[Serializable]
+public class GoldInfo
+{
+    public int gold;
 }

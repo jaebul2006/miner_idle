@@ -45,12 +45,10 @@ public class Miner : MonoBehaviour
 
     void Start()
     {
-        _tkspr.FlipX = false;
         _miner_mgr = GameObject.Find("MinerMgr").GetComponent<MinerMgr>();
         _homing_mgr = GameObject.Find("HomingMgr").GetComponent<HomingMgr>();
 		_num_rolling_mgr = GameObject.Find ("NumberRollingMgr").GetComponent<NumberRollingMgr> ();
 		_life_time = MAX_LIFE_TIME;
-		_prev_state = _state;
 		if (_miner_mgr.IsGetEscalator()) 
 		{
 			UseEscalator ();
@@ -271,5 +269,31 @@ public class Miner : MonoBehaviour
 			}
 		}
 	}
+
+    // 광부 생성시 상태방향을 세트.
+    public void SetState(State state, State prev_state)
+    {
+        _state = state;
+        _prev_state = prev_state;
+        if(_state == State.Stunned)
+        {
+            if(_prev_state == State.ToCart)
+            {
+                _tkspr.FlipX = false;
+            }
+            else
+            {
+                _tkspr.FlipX = true;
+            }
+        }
+        else if(_state == State.ToCart)
+        {
+            _tkspr.FlipX = false;
+        }
+        else
+        {
+            _tkspr.FlipX = true;
+        }
+    }
 
 }

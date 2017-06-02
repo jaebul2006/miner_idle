@@ -42,6 +42,7 @@ public class Miner : MonoBehaviour
 	float CLOSEST_CART_X = -0.76f;
 	float CLOSEST_MINE_X = 5.17f;
 
+    PunchMgr _punch_mgr;
 
     void Start()
     {
@@ -53,7 +54,7 @@ public class Miner : MonoBehaviour
 		{
 			UseEscalator ();
 		}
-
+        _punch_mgr = GameObject.Find("PunchMgr").GetComponent<PunchMgr>();
     }
 
     void Update()
@@ -156,16 +157,17 @@ public class Miner : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.collider.name == "cart")
+        if (collision.collider.name == "cart_collider")
         {
             _state = State.ToMine;
             _tkspr.FlipX = true;
             int get_gold = _miner_mgr.GetPerGold(_level);
 			int add_gold = _miner_mgr.GetAdditionalGold (get_gold);
 			get_gold += add_gold;
-			Debug.Log ("획득골드:" + get_gold);
+			//Debug.Log ("획득골드:" + get_gold);
             _homing_mgr.GoldGetEff();
 			_num_rolling_mgr.AddGold(get_gold);
+            _punch_mgr.AddPunch();
         }
 
         if(collision.collider.name == "mine")
